@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Avatar TT GDTX - NN, TH tỉnh Đắk Nông</title>
+    <title>Tạo Avatar Kỷ Niệm</title>
     <!-- Tải Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tải Google Fonts -->
@@ -13,26 +13,28 @@
     <!-- Liên kết đến tệp CSS tùy chỉnh -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 text-center">
+<body class="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-900 text-white min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-lg mx-auto bg-black bg-opacity-50 rounded-3xl shadow-2xl p-8 text-center backdrop-blur-md">
         
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">Tạo Avatar Kỷ Niệm</h1>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">Kỷ niệm là học viên của trung tâm</p>
+        <div class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-yellow-300">Tạo Avatar Kỷ Niệm</h1>
+            <p class="text-gray-300 mt-2">Kỷ niệm là học viên của trung tâm</p>
         </div>
 
         <!-- Frame Preview -->
-        <div class="mb-6">
-            <p class="font-semibold mb-2">Khung ảnh sẽ được sử dụng:</p>
-            <img id="frame-preview" src="./Add-on/framett.png" alt="Khung ảnh Đoàn TNCS HCM" class="w-32 h-32 mx-auto rounded-full object-cover border-4 border-blue-500 shadow-lg">
+        <div class="mb-8">
+            <p class="font-semibold mb-3 text-yellow-200">Khung ảnh sẽ được sử dụng:</p>
+            <div class="flex items-center justify-center">
+                <img id="frame-preview" src="./Add-on/framett.png" alt="Khung ảnh" class="w-40 h-40 rounded-full ring-4 ring-yellow-400 shadow-lg object-cover">
+            </div>
         </div>
 
         <!-- File Upload Section -->
         <div id="upload-section">
-            <p class="mb-4 text-gray-600 dark:text-gray-300">Chọn ảnh đại diện của bạn để bắt đầu.</p>
-            <label for="avatar-uploader" class="btn btn-primary cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <p class="mb-4 text-gray-200">Chọn ảnh đại diện của bạn để bắt đầu.</p>
+            <label for="avatar-uploader" class="btn btn-primary cursor-pointer inline-flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
                 Tải ảnh lên
@@ -42,25 +44,28 @@
 
         <!-- Result Section -->
         <div id="result-section" class="hidden">
-            <p class="font-semibold mb-2">Đây là kết quả của bạn!</p>
+            <p class="font-semibold text-yellow-200 mb-4">Đây là kết quả của bạn!</p>
             <!-- Canvas for merging images -->
-            <canvas id="avatar-canvas" class="rounded-lg shadow-md mx-auto border-2 border-gray-300 dark:border-gray-600"></canvas>
+            <div class="relative w-full flex justify-center">
+                <canvas id="avatar-canvas" class="rounded-full shadow-2xl border-4 border-yellow-400"></canvas>
+            </div>
             
-            <p id="loading-message" class="text-yellow-500 my-4 hidden">Đang xử lý, vui lòng chờ...</p>
+            <p id="loading-message" class="text-yellow-300 my-4 hidden">Đang xử lý, vui lòng chờ...</p>
 
-            <a id="download-btn" href="#" class="btn btn-secondary mt-4 hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.293a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-                Tải ảnh về
-            </a>
-            
-            <button id="reset-btn" class="btn bg-gray-500 hover:bg-gray-600 mt-4 ml-2">
-                Tạo ảnh khác
-            </button>
+            <div class="mt-6 flex justify-center space-x-4">
+                <a id="download-btn" href="#" class="btn btn-secondary inline-flex items-center justify-center hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 9.293a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Tải ảnh về
+                </a>
+                <button id="reset-btn" class="btn btn-tertiary inline-flex items-center justify-center">
+                    Tạo ảnh khác
+                </button>
+            </div>
         </div>
     </div>
-    <!-- Liên kết đến tệp JavaScript, defer đảm bảo script chạy sau khi HTML được tải xong -->
+    <!-- Liên kết đến tệp JavaScript -->
     <script src="script.js" defer></script>
 </body>
 </html>
