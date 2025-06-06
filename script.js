@@ -9,14 +9,13 @@ const loadingMessage = document.getElementById('loading-message');
 const ctx = canvas.getContext('2d');
 
 // Hằng số cho kích thước canvas để đảm bảo chất lượng ảnh
-const CANVAS_SIZE = 600; 
+const CANVAS_SIZE = 600;
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 
-// Nguồn ảnh khung
-const frameSrc = 'https://i.imgur.com/GhpC5D2.png';
+// Nguồn ảnh khung (sử dụng hình ảnh cục bộ thay vì Imgur)
+const frameSrc = './Add-on/framett.png';
 const frameImage = new Image();
-frameImage.crossOrigin = "anonymous"; // Xử lý vấn đề CORS nếu có
 frameImage.src = frameSrc;
 
 // Bắt sự kiện khi người dùng chọn tệp
