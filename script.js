@@ -91,7 +91,7 @@ function drawCircularAvatar(avatar, frame) {
   // Tạo link tải
   const finalImageURL = canvas.toDataURL('image/png');
   downloadBtn.href = finalImageURL;
-  downloadBtn.download = 'avatar-hoc-duong.png';
+  downloadBtn.download = 'avatar-hoc-vien.png';
 
   // Ẩn loader và hiển thị nút tải
   loader.classList.add('hidden');
