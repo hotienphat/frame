@@ -1,44 +1,62 @@
-/* Thiết lập font chữ chung cho toàn bộ trang */
+/* Font và reset cơ bản */
 body {
     font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
 }
+
+/* Thiết lập cho container */
+/* Đã dùng Tailwind để xử lý, chỉ tùy chỉnh màu nền mờ */
 
 /* Định dạng chung cho các nút bấm */
 .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem; /* 12px 24px */
-    border-radius: 0.5rem; /* 8px */
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
     font-weight: 600;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    transition-property: transform, background-color;
-    transition-duration: 200ms;
-    transition-timing-function: ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    text-decoration: none;
+    color: white;
+    user-select: none;
 }
 
 .btn:active {
     transform: scale(0.95);
 }
 
-/* Định dạng cho nút chính (màu xanh) */
+/* Nút chính gradient vàng */
 .btn-primary {
-    background-color: #2563EB; /* blue-600 */
+    background: linear-gradient(135deg, #FFD54F, #FFB300);
+    box-shadow: 0 4px 10px rgba(255, 181, 0, 0.4);
 }
 
 .btn-primary:hover {
-    background-color: #1D4ED8; /* blue-700 */
+    background: linear-gradient(135deg, #FFB300, #FFA000);
 }
 
-/* Định dạng cho nút phụ (màu xanh lá) */
+/* Nút phụ gradient đỏ tím */
 .btn-secondary {
-    background-color: #16A34A; /* green-600 */
+    background: linear-gradient(135deg, #D81B60, #8E24AA);
+    box-shadow: 0 4px 10px rgba(142, 36, 170, 0.4);
 }
 
 .btn-secondary:hover {
-    background-color: #15803D; /* green-700 */
+    background: linear-gradient(135deg, #8E24AA, #6A1B9A);
 }
 
-/* Lớp tiện ích để ẩn phần tử */
+/* Nút tạo lại ảnh */
+.btn-tertiary {
+    background: linear-gradient(135deg, #4CAF50, #388E3C);
+    box-shadow: 0 4px 10px rgba(56, 142, 60, 0.4);
+}
+
+.btn-tertiary:hover {
+    background: linear-gradient(135deg, #388E3C, #2E7D32);
+}
+
+/* Ẩn phần tử */
 .hidden {
     display: none;
 }
