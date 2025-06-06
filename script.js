@@ -8,12 +8,12 @@ const resultSection = document.getElementById('result-section');
 const loadingMessage = document.getElementById('loading-message');
 const ctx = canvas.getContext('2d');
 
-// Hằng số cho kích thước canvas để đảm bảo chất lượng ảnh
+// Kích thước canvas (thay đổi để phù hợp với khung tròn)
 const CANVAS_SIZE = 600;
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 
-// Nguồn ảnh khung (sử dụng hình ảnh cục bộ thay vì Imgur)
+// Nguồn ảnh khung (đảm bảo có hình trong thư mục Add-on)
 const frameSrc = './Add-on/framett.png';
 const frameImage = new Image();
 frameImage.src = frameSrc;
@@ -21,87 +21,88 @@ frameImage.src = frameSrc;
 // Bắt sự kiện khi người dùng chọn tệp
 uploader.addEventListener('change', (event) => {
     const file = event.target.files[0];
-    if (!file) return; // Nếu không có tệp nào được chọn, thoát ra
+    if (!file) return;
 
-    // Hiển thị trạng thái đang tải và khu vực kết quả
+    // Chuẩn bị hiển thị
     uploadSection.classList.add('hidden');
     resultSection.classList.remove('hidden');
     loadingMessage.classList.remove('hidden');
     downloadBtn.classList.add('hidden');
 
     const reader = new FileReader();
-
-    // Khi tệp đã được đọc xong
     reader.onload = (e) => {
         const avatarImage = new Image();
-        // Khi ảnh đại diện đã tải xong
         avatarImage.onload = () => {
-            // Vẽ ảnh đại diện và khung lên canvas
-            drawImages(avatarImage, frameImage);
+            // Khi cả avatar và frame đã sẵn sàng, vẽ vào canvas
+            drawCircularAvatar(avatarImage, frameImage);
         };
         avatarImage.src = e.target.result;
     };
-
-    // Đọc tệp ảnh dưới dạng Data URL
     reader.readAsDataURL(file);
 });
 
 /**
- * Vẽ ảnh đại diện và khung lên canvas.
- * Ảnh đại diện sẽ được điều chỉnh kích thước để lấp đầy canvas mà vẫn giữ nguyên tỷ lệ.
- * @param {Image} avatar - Ảnh đại diện người dùng tải lên.
- * @param {Image} frame - Ảnh khung để lồng vào.
+ * Vẽ ảnh đại diện theo hình tròn và khung lên canvas.
+ * @param {Image} avatar - Ảnh đại diện người dùng
+ * @param {Image} frame - Ảnh khung
  */
-function drawImages(avatar, frame) {
-    // Đảm bảo ảnh khung đã tải xong trước khi vẽ
+function drawCircularAvatar(avatar, frame) {
     if (!frame.complete) {
-        frame.onload = () => drawImages(avatar, frame);
+        frame.onload = () => drawCircularAvatar(avatar, frame);
         return;
     }
 
-    // Xóa canvas trước khi vẽ mới
+    // Xóa canvas
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // --- Tính toán tỷ lệ để ảnh đại diện "cover" toàn bộ canvas ---
-    const canvasRatio = CANVAS_SIZE / CANVAS_SIZE; // Tỷ lệ là 1, nhưng để cho rõ ràng
+    // Tạo clip hình tròn ở giữa canvas
+    const centerX = CANVAS_SIZE / 2;
+    const centerY = CANVAS_SIZE / 2;
+    const radius = CANVAS_SIZE / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.clip();
+
+    // Tính tỉ lệ để avatar cover toàn bộ vùng tròn
     const avatarRatio = avatar.width / avatar.height;
-    
-    let sx, sy, sWidth, sHeight;
+    let drawWidth, drawHeight, dx, dy;
 
-    if (avatarRatio > canvasRatio) {
-        // Ảnh đại diện rộng hơn canvas
-        sHeight = avatar.height;
-        sWidth = sHeight * canvasRatio;
-        sx = (avatar.width - sWidth) / 2;
-        sy = 0;
+    if (avatarRatio > 1) {
+        // Ảnh rộng hơn khung
+        drawHeight = CANVAS_SIZE;
+        drawWidth = avatar.width * (CANVAS_SIZE / avatar.height);
+        dx = (CANVAS_SIZE - drawWidth) / 2;
+        dy = 0;
     } else {
-        // Ảnh đại diện cao hơn hoặc có tỷ lệ bằng canvas
-        sWidth = avatar.width;
-        sHeight = sWidth / canvasRatio;
-        sx = 0;
-        sy = (avatar.height - sHeight) / 2;
+        // Ảnh cao hơn hoặc vuông
+        drawWidth = CANVAS_SIZE;
+        drawHeight = avatar.height * (CANVAS_SIZE / avatar.width);
+        dx = 0;
+        dy = (CANVAS_SIZE - drawHeight) / 2;
     }
-    
-    // Vẽ ảnh đại diện (đã được cắt và căn giữa) lên trước
-    ctx.drawImage(avatar, sx, sy, sWidth, sHeight, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // Vẽ ảnh khung đè lên trên
+    ctx.drawImage(avatar, dx, dy, drawWidth, drawHeight);
+    ctx.restore();
+
+    // Vẽ khung lên phía trên
     ctx.drawImage(frame, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
-    
-    // --- Hoàn tất ---
-    // Tạo URL cho ảnh kết quả và gán vào nút tải về
+
+    // Tạo URL cho ảnh kết quả và gán cho nút tải
     const finalImageURL = canvas.toDataURL('image/png');
     downloadBtn.href = finalImageURL;
-    downloadBtn.download = 'avatar-ky-niem-doan-tncs-hcm.png';
-    
-    // Ẩn thông báo tải và hiện nút tải về
+    downloadBtn.download = 'avatar-ky-niem.png';
+
+    // Hiển thị nút tải và ẩn loading
     loadingMessage.classList.add('hidden');
     downloadBtn.classList.remove('hidden');
 }
 
-// Bắt sự kiện cho nút "Tạo ảnh khác"
+// Sự kiện cho nút Tạo ảnh khác
 resetBtn.addEventListener('click', () => {
     uploadSection.classList.remove('hidden');
     resultSection.classList.add('hidden');
-    uploader.value = ''; // Xóa tệp đã chọn trong input
+    uploader.value = '';
 });
