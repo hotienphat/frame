@@ -1,0 +1,44 @@
+/* Thiết lập font chữ chung cho toàn bộ trang */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Định dạng chung cho các nút bấm */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem; /* 12px 24px */
+    border-radius: 0.5rem; /* 8px */
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transition-property: transform, background-color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+/* Định dạng cho nút chính (màu xanh) */
+.btn-primary {
+    background-color: #2563EB; /* blue-600 */
+}
+
+.btn-primary:hover {
+    background-color: #1D4ED8; /* blue-700 */
+}
+
+/* Định dạng cho nút phụ (màu xanh lá) */
+.btn-secondary {
+    background-color: #16A34A; /* green-600 */
+}
+
+.btn-secondary:hover {
+    background-color: #15803D; /* green-700 */
+}
+
+/* Lớp tiện ích để ẩn phần tử */
+.hidden {
+    display: none;
+}
