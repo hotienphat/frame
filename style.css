@@ -1,0 +1,64 @@
+/* Font và cơ bản */
+body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+
+/* Ẩn */
+.hidden { display: none; }
+
+/* Nút chung */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  text-decoration: none;
+  user-select: none;
+  cursor: pointer;
+}
+.btn:active { transform: scale(0.95); }
+.btn svg { transition: transform 0.2s ease-in-out; }
+.btn:hover svg { transform: scale(1.1); }
+
+/* Hiệu ứng hover động */
+@keyframes bounceHover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.animate-bounce-hover:hover { animation: bounceHover 0.5s ease-in-out infinite; }
+
+/* Nút chính (chọn ảnh) màu xanh pastel */
+.btn-primary {
+  background: linear-gradient(135deg, #81C784, #4CAF50);
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+.btn-primary:hover { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+
+/* Nút tải về (màu xanh đậm hơn) */
+.btn-secondary {
+  background: linear-gradient(135deg, #388E3C, #2E7D32);
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+.btn-secondary:hover { background: linear-gradient(135deg, #2E7D32, #1B5E20); }
+
+/* Nút tạo lại (màu vàng nhẹ) */
+.btn-tertiary {
+  background: linear-gradient(135deg, #FFEB3B, #FDD835);
+  color: #444;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.btn-tertiary:hover { background: linear-gradient(135deg, #FDD835, #FBC02D); }
+
+/* Spinner */
+.spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFF;
+  border-radius: 9999px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
