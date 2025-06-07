@@ -1,157 +1,107 @@
-// DOM Elements
+// Các phần tử DOM
 const uploader = document.getElementById('avatar-uploader');
-const msgInput = document.getElementById('message-input');
-const genAvatarBtn = document.getElementById('generate-avatar');
-const genBannerBtn = document.getElementById('generate-banner');
-const resetBtn = document.getElementById('reset-btn');
-const resultSection = document.getElementById('result-section');
-const overlay = document.getElementById('overlay');
-const avatarCanvas = document.getElementById('avatar-canvas');
-const bannerCanvas = document.getElementById('banner-canvas');
+const canvas = document.getElementById('avatar-canvas');
 const downloadBtn = document.getElementById('download-btn');
-const ctxAvatar = avatarCanvas.getContext('2d');
-const ctxBanner = bannerCanvas.getContext('2d');
+const resetBtn = document.getElementById('reset-btn');
+const uploadSection = document.getElementById('upload-section');
+const resultSection = document.getElementById('result-section');
+const loadingMessage = document.getElementById('overlay');
+const loader = document.getElementById('loader');
+const ctx = canvas.getContext('2d');
+
+// Kích thước canvas cho hình tròn
 const CANVAS_SIZE = 600;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
 
-// Setup canvas sizes
-avatarCanvas.width = CANVAS_SIZE;
-avatarCanvas.height = CANVAS_SIZE;
+// Ảnh khung
+const frameSrc = './Add-on/framett.png';
+const frameImage = new Image();
+frameImage.src = frameSrc;
 
-bannerCanvas.width = 1200;
-bannerCanvas.height = 400;
-
-let avatarImage = null;
-
-// Load image
-uploader.addEventListener('change', e => {
-  const file = e.target.files[0];
+// Khi chọn file
+uploader.addEventListener('change', (event) => {
+  const file = event.target.files[0];
   if (!file) return;
+
+  // Ẩn phần upload, hiển thị result và loader
+  uploadSection.classList.add('hidden');
+  resultSection.classList.remove('hidden');
+  loader.classList.remove('hidden');
+  downloadBtn.classList.add('hidden');
+  loadingMessage.classList.remove('hidden');
+
   const reader = new FileReader();
-  reader.onload = ev => {
-    avatarImage = new Image();
-    avatarImage.src = ev.target.result;
-    avatarImage.onload = () => {};
+  reader.onload = (e) => {
+    const avatarImage = new Image();
+    avatarImage.onload = () => {
+      // Giả lập thời gian xử lý (1s) để hiển thị loader
+      setTimeout(() => {
+        drawCircularAvatar(avatarImage, frameImage);
+      }, 1000);
+    };
+    avatarImage.src = e.target.result;
   };
   reader.readAsDataURL(file);
 });
 
-// Loader toggles
-function showLoader() { overlay.classList.remove('hidden'); }
-function hideLoader() { overlay.classList.add('hidden'); }
+/**
+ * Vẽ avatar tròn và khung
+ */
+function drawCircularAvatar(avatar, frame) {
+  if (!frame.complete) {
+    frame.onload = () => drawCircularAvatar(avatar, frame);
+    return;
+  }
 
-// Draw circular avatar
-function drawAvatar() {
-  ctxAvatar.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  ctxAvatar.save();
-  ctxAvatar.beginPath();
-  ctxAvatar.arc(CANVAS_SIZE/2, CANVAS_SIZE/2, CANVAS_SIZE/2, 0, Math.PI*2);
-  ctxAvatar.closePath();
-  ctxAvatar.clip();
+  // Xóa canvas
+  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-  const ratio = avatarImage.width / avatarImage.height;
+  // Thiết lập clip tròn
+  const cx = CANVAS_SIZE / 2;
+  const cy = CANVAS_SIZE / 2;
+  const r = CANVAS_SIZE / 2;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2, true);
+  ctx.closePath();
+  ctx.clip();
+
+  // Tính tỉ lệ cover
+  const ratio = avatar.width / avatar.height;
   let dw, dh, dx, dy;
   if (ratio > 1) {
     dh = CANVAS_SIZE;
-    dw = avatarImage.width * (CANVAS_SIZE / avatarImage.height);
+    dw = avatar.width * (CANVAS_SIZE / avatar.height);
     dx = (CANVAS_SIZE - dw) / 2;
     dy = 0;
   } else {
     dw = CANVAS_SIZE;
-    dh = avatarImage.height * (CANVAS_SIZE / avatarImage.width);
+    dh = avatar.height * (CANVAS_SIZE / avatar.width);
     dx = 0;
     dy = (CANVAS_SIZE - dh) / 2;
   }
+  ctx.drawImage(avatar, dx, dy, dw, dh);
+  ctx.restore();
 
-  ctxAvatar.drawImage(avatarImage, dx, dy, dw, dh);
-  ctxAvatar.restore();
+  // Vẽ khung
+  ctx.drawImage(frame, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+  // Tạo link tải
+  const finalImageURL = canvas.toDataURL('image/png');
+  downloadBtn.href = finalImageURL;
+  downloadBtn.download = 'avatar-hoc-vien.png';
+
+  // Ẩn loader và hiển thị nút tải
+  loader.classList.add('hidden');
+  loadingMessage.classList.add('hidden');
+  downloadBtn.classList.remove('hidden');
 }
 
-// Draw banner with message
-function drawBanner() {
-  ctxBanner.clearRect(0, 0, bannerCanvas.width, bannerCanvas.height);
-  const padding = 20;
-  const avatarSize = bannerCanvas.height - 2 * padding;
-
-  // Avatar circle
-  ctxBanner.save();
-  ctxBanner.beginPath();
-  ctxBanner.arc(padding + avatarSize/2, bannerCanvas.height/2, avatarSize/2, 0, Math.PI*2);
-  ctxBanner.closePath();
-  ctxBanner.clip();
-  ctxBanner.drawImage(avatarImage, padding, padding, avatarSize, avatarSize);
-  ctxBanner.restore();
-
-  // Border
-  ctxBanner.lineWidth = 4;
-  ctxBanner.strokeStyle = '#FDD835';
-  ctxBanner.beginPath();
-  ctxBanner.arc(padding + avatarSize/2, bannerCanvas.height/2, avatarSize/2, 0, Math.PI*2);
-  ctxBanner.stroke();
-
-  // Message
-  const text = msgInput.value.trim();
-  ctxBanner.fillStyle = '#FFF';
-  ctxBanner.font = 'bold 28px Inter';
-  ctxBanner.textBaseline = 'middle';
-  wrapText(ctxBanner, text, avatarSize + padding * 2, bannerCanvas.height/2, bannerCanvas.width - avatarSize - padding * 3, 34);
-}
-
-// Text wrapping helper
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(' ');
-  let line = '';
-  let dy = 0;
-  words.forEach((word, i) => {
-    const test = line + word + ' ';
-    if (ctx.measureText(test).width > maxWidth && i > 0) {
-      ctx.fillText(line, x, y + dy);
-      line = word + ' ';
-      dy += lineHeight;
-    } else {
-      line = test;
-    }
-  });
-  ctx.fillText(line, x, y + dy);
-}
-
-// Show avatar
-genAvatarBtn.addEventListener('click', () => {
-  if (!avatarImage) return;
-  bannerCanvas.classList.add('hidden');
-  resultSection.classList.remove('hidden');
-  avatarCanvas.classList.remove('hidden');
-  showLoader();
-  setTimeout(() => {
-    drawAvatar();
-    hideLoader();
-    downloadBtn.href = avatarCanvas.toDataURL('image/png');
-    downloadBtn.download = 'avatar.png';
-    downloadBtn.classList.remove('hidden');
-  }, 800);
-});
-
-// Show banner
-genBannerBtn.addEventListener('click', () => {
-  if (!avatarImage) return;
-  avatarCanvas.classList.add('hidden');
-  resultSection.classList.remove('hidden');
-  bannerCanvas.classList.remove('hidden');
-  showLoader();
-  setTimeout(() => {
-    drawBanner();
-    hideLoader();
-    downloadBtn.href = bannerCanvas.toDataURL('image/png');
-    downloadBtn.download = 'banner.png';
-    downloadBtn.classList.remove('hidden');
-  }, 800);
-});
-
-// Reset all
+// Tạo lại
 resetBtn.addEventListener('click', () => {
+  uploadSection.classList.remove('hidden');
   resultSection.classList.add('hidden');
-  avatarCanvas.classList.add('hidden');
-  bannerCanvas.classList.add('hidden');
-  downloadBtn.classList.add('hidden');
   uploader.value = '';
-  msgInput.value = '';
 });
