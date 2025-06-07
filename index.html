@@ -16,14 +16,14 @@
     <!-- Header -->
     <div class="mb-6 text-center">
       <h1 class="text-3xl font-extrabold text-yellow-200">Avatar & Banner Generator</h1>
-      <p class="mt-1 text-yellow-100">Tạo avatar vòng tròn hoặc banner ngang với lời muốn nói</p>
+      <p class="mt-1 text-yellow-100">Tạo avatar hoặc banner ngang với lời muốn nói</p>
     </div>
 
     <!-- Controls -->
     <div id="controls" class="mb-6 space-y-4">
       <!-- Avatar Uploader -->
       <div>
-        <label for="avatar-uploader" class="btn btn-primary">
+        <label for="avatar-uploader" class="inline-flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg cursor-pointer">
           Chọn ảnh đại diện
         </label>
         <input id="avatar-uploader" type="file" class="hidden" accept="image/png, image/jpeg">
@@ -35,15 +35,15 @@
       </div>
       <!-- Generate Buttons -->
       <div class="flex space-x-4">
-        <button id="generate-avatar" class="btn btn-secondary flex-1">Tạo Avatar</button>
-        <button id="generate-banner" class="btn btn-secondary flex-1">Tạo Banner</button>
+        <button id="generate-avatar" class="flex-1 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg">Tạo Avatar</button>
+        <button id="generate-banner" class="flex-1 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg">Tạo Banner</button>
       </div>
     </div>
 
     <!-- Result Section -->
-    <div id="result-section" class="hidden mt-6 text-center">
+    <div id="result-section" class="relative hidden mt-6 text-center">
       <!-- Loader Overlay -->
-      <div id="overlay" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10 hidden">
+      <div id="overlay" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden rounded-3xl">
         <div class="loader"></div>
       </div>
       <!-- Canvas Preview -->
@@ -53,8 +53,8 @@
       </div>
       <!-- Download & Reset -->
       <div class="mt-6 flex justify-center space-x-4">
-        <a id="download-btn" href="#" class="btn btn-secondary hidden">Tải xuống</a>
-        <button id="reset-btn" class="btn btn-tertiary">Tạo lại</button>
+        <a id="download-btn" href="#" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg hidden">Tải xuống</a>
+        <button id="reset-btn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg">Tạo lại</button>
       </div>
     </div>
   </div>
